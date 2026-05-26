@@ -5,3 +5,5 @@ from dataclasses import dataclass
 class AppConfig:
     camera: int = 0
     output: str = "demo_output.mp4"
+    log: str = "tracking_log.jsonl"
+    max_frames: int = 0
