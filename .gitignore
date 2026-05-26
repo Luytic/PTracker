@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+
+# Runtime artifacts
+demo_output.mp4
+tracking_log.json
+tracking_log.jsonl
+
