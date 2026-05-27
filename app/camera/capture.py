@@ -10,12 +10,12 @@ import numpy as np
 @dataclass(frozen=True)
 class CameraConfig:
     device_id: int = 0
+    width: int = 1280
+    height: int = 720
     warmup_frames: int = 4
 
 
 class Webcam:
-    """OpenCV webcam wrapper (default driver resolution)."""
-
     def __init__(self, config: CameraConfig) -> None:
         self._config = config
         self._cap: cv2.VideoCapture | None = None
@@ -32,6 +32,10 @@ class Webcam:
             cap = cv2.VideoCapture(self._config.device_id)
         if not cap.isOpened():
             raise RuntimeError(f"Cannot open camera {self._config.device_id}")
+        if self._config.width > 0:
+            cap.set(cv2.CAP_PROP_FRAME_WIDTH, float(self._config.width))
+        if self._config.height > 0:
+            cap.set(cv2.CAP_PROP_FRAME_HEIGHT, float(self._config.height))
         for _ in range(max(0, self._config.warmup_frames)):
             cap.read()
         fps = cap.get(cv2.CAP_PROP_FPS)
