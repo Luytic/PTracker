@@ -1,0 +1,36 @@
+META_ARC: "pentiptrack"
+
+BACKBONE:
+    TYPE: "mobilenetv3_small_v3"
+    KWARGS:
+        used_layers: [4]
+
+ADJUST:
+    ADJUST: True
+    TYPE: AdjustLayer
+    KWARGS:
+        in_channels: 96
+        out_channels: 96
+
+BAN:
+    BAN: True
+    TYPE: DepthwiseBAN
+    KWARGS:
+        in_channels: 96
+        out_channels: 96
+
+CUDA: True
+
+POINT:
+    STRIDE: 16
+
+TRACK:
+    TYPE: PenTipTracker
+    WINDOW_INFLUENCE: 0.455
+    PENALTY_K: 0.138
+    LR: 0.348
+    EXEMPLAR_SIZE: 127
+    INSTANCE_SIZE: 255
+    BASE_SIZE: 7
+    CONTEXT_AMOUNT: 0.5
+    OUTPUT_SIZE: 15
