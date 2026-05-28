@@ -45,6 +45,14 @@ def draw_tracking_overlay(
             tx, ty = int(round(px + flow_dx)), int(round(py + flow_dy))
             cv2.arrowedLine(out, (px, py), (tx, ty), (100, 255, 100), 1, tipLength=0.35)
 
+    if debug and flow_feature_tracks:
+        for track in flow_feature_tracks:
+            _draw_feature_track(out, track, (80, 255, 80))
+
+    if debug and flow_rejected_tracks:
+        for track in flow_rejected_tracks:
+            _draw_feature_track(out, track, (60, 60, 255))
+
     if bbox is not None:
         x1, y1, x2, y2 = bbox
         if tracking_state == "visible":

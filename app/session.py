@@ -179,6 +179,20 @@ class WebcamTrackingSession:
             "method_used": out.method_used,
             "latency_ms": out.timings.total_ms,
         }
+        if self._config.debug:
+            row.update(
+                {
+                    "nn_inference_used": out.nn_inference_used,
+                    "nn_ms": out.timings.nn_ms,
+                    "cv_ms": out.timings.cv_ms,
+                    "kalman_predict_ms": out.timings.kalman_predict_ms,
+                    "kalman_update_ms": out.timings.kalman_update_ms,
+                    "nn_peak_score": out.nn_peak_score,
+                    "object_scale_ratio": out.object_scale_ratio,
+                    "flow_valid": out.flow_valid,
+                    "flow_n_points": out.flow_n_points,
+                }
+            )
         return row
 
     def _render(self, frame: np.ndarray, out: PipelineOutput) -> np.ndarray:
@@ -187,7 +201,7 @@ class WebcamTrackingSession:
             bbox=out.bbox,
             point=(out.x, out.y),
             tracking_state=out.tracking_state,
-            debug=False,
+            debug=self._config.debug,
             search_roi=out.search_roi,
             flow_roi=out.flow_roi,
             flow_dx=out.flow_dx,
@@ -226,3 +240,13 @@ class WebcamTrackingSession:
         print(f"P99 latency ms: {summary['p99_latency_ms']:.2f}")
         print(f"Dropped/skipped camera frames (est.): {self._metrics.dropped_frames}")
         print(f"NN inference rate: {summary['nn_inference_rate']:.3f}")
+        if self._config.debug:
+            print(f"Camera FPS (nominal): {self._webcam.fps:.1f}")
+            print(
+                f"Slow loop iterations (>1.8x frame budget): "
+                f"{self._metrics.slow_iterations}"
+            )
+            print(
+                "Note: session FPS << processing FPS when mp4 write + imshow + JSONL "
+                "dominate wall time (not NN inference)."
+            )
