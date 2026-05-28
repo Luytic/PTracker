@@ -9,7 +9,9 @@ class AppConfig:
     max_frames: int = 0
     width: int = 1280
     height: int = 720
+    pentiptrack_version: str = "v2"
+    nn_interval: int = 3
 
     @property
     def tracker_label(self) -> str:
-        return "PenTipTrack"
+        return f"PenTipTrack {self.pentiptrack_version.upper()}"

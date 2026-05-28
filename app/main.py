@@ -1,25 +1,39 @@
 from __future__ import annotations
-import cv2
-from app.camera import CameraConfig, Webcam, WINDOW_NAME, destroy_window
-from app.cli import parse_args
 
-def main(argv=None) -> None:
+from app.bootstrap import preload_pipeline
+from app.camera import CameraConfig, Webcam
+from app.cli import parse_args
+from app.config import AppConfig
+from app.session import WebcamTrackingSession
+
+
+def main(argv: list[str] | None = None) -> None:
     config = parse_args(argv)
-    cam = Webcam(CameraConfig(device_id=config.camera))
-    cam.open()
-    cam.setup_window(WINDOW_NAME)
-    print("Camera preview — q/ESC to quit")
+    webcam = Webcam(
+        CameraConfig(
+            device_id=config.camera,
+            width=config.width,
+            height=config.height,
+        )
+    )
+    webcam.open()
+    w, h = webcam.frame_size
+    res_note = "max" if config.width <= 0 and config.height <= 0 else "requested"
+    print(f"Camera capture: {w}x{h} ({res_note})")
     try:
-        while True:
-            ok, frame = cam.read()
-            if not ok or frame is None:
-                break
-            cv2.imshow(WINDOW_NAME, frame)
-            if (cv2.waitKey(1) & 0xFF) in (27, ord("q")):
-                break
+        pipeline = preload_pipeline(
+            webcam,
+            fps=webcam.fps,
+            pentiptrack_version=config.pentiptrack_version,
+            nn_interval=config.nn_interval,
+        )
+        print(
+            f"Model loaded: {config.tracker_label} | NN every {config.nn_interval} frame(s)"
+        )
+        WebcamTrackingSession(config, webcam, pipeline).run()
     finally:
-        cam.release()
-        destroy_window()
+        webcam.release()
+
 
 if __name__ == "__main__":
     main()

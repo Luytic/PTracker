@@ -19,7 +19,7 @@ def create_tracking_pipeline(
     fps: float = 30.0,
     *,
     pentiptrack_version: str = "v3",
-    nn_interval: int = 10,
+    nn_interval: int = 3,
     config: TrackingConfig | None = None,
 ) -> TrackingPipeline:
     """Build TrackingPipeline with default PenTipTrack + LK + Kalman + bbox depth."""
