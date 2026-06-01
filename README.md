@@ -86,19 +86,30 @@ python run_webcam_tracker.py --width 1280 --height 720
 
 ### All CLI flags
 
+**Session & outputs**
+
 | Flag | Default | Description |
 |------|---------|-------------|
 | `--camera` | `0` | Webcam device index |
 | `--output` | `demo_output.mp4` | Recorded overlay video |
 | `--log` | `tracking_log.jsonl` | Per-frame JSONL log |
 | `--max-frames` | `0` | Stop after N frames (0 = unlimited) |
-| `--width` / `--height` | `0` | Capture size; `0` = max native |
-| `--pentiptrack-version` | `v3` | `v2` or `v3` |
-| `--nn-interval` | `3` | Run NN every N frames |
-| `--debug` | off | Debug HUD + extra log fields |
+
+**Capture**
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--width` / `--height` | `0` | Capture size in pixels; `0` = camera maximum |
+
+**Tracker**
+
+| Flag | Default | Description |
+|------|---------|-------------|
+| `--pentiptrack-version` | `v3` | PenTipTrack weights: `v2` or `v3` |
+| `--nn-interval` | `3` | Run NN every N frames (≥ 1); Kalman + flow between |
+| `--debug` | off | Debug HUD on screen + extra JSONL timing fields |
 
 ---
-
 ## Initialization & controls
 
 1. **Start** — window opens on the first camera frame.
