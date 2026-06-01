@@ -37,7 +37,7 @@ CUDA is used automatically when available; CPU fallback works but NN is slower.
 ### 1. Clone and install
 
 ```bash
-git clone <repo-url> tracking_proj
+git clone https://github.com/Luytic/PTracker.git
 cd tracking_proj
 pip install -r requirements.txt
 ```
